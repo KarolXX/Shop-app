@@ -24,7 +24,8 @@ public class ProductService {
 
     @Transactional
     public void changeAmount(int id, String change) {
-        var target = repository.findProductByIdAndActiveTrue(id).orElseThrow(() -> new IllegalArgumentException("Product with given id not found"));
+        var target = repository.findProductByIdAndActiveTrue(id)
+                .orElseThrow(() -> new IllegalArgumentException("Product with given id not found"));
         if(change.equals("plus")) {
             logger.info("Increasing the amount of product");
             target.setAmount(target.getAmount() + 1);
@@ -34,17 +35,6 @@ public class ProductService {
             target.setAmount(target.getAmount() - 1);
         }
     }
-
-//    public static void setTimeout(Runnable runnable, int delay) {
-//        new Thread(() -> {
-//            try{
-//                Thread.sleep(delay);
-//                runnable.run();
-//            } catch (Exception e) {
-//                logger.error("Error during deletion the product");
-//            }
-//        }).start();
-//    }
 
     @Transactional
     public void deleteProduct(int id) {

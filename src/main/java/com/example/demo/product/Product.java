@@ -1,5 +1,6 @@
 package com.example.demo.product;
 
+import com.example.demo.category.Category;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -19,6 +20,10 @@ public class Product {
     private boolean active = true;
     private LocalDateTime deliveryDate;
     private LocalDateTime sellOutDate;
+
+    @ManyToOne
+    @JoinColumn(name = "categories_id")
+    private Category category;
 
     public int getId() {
         return id;
@@ -50,6 +55,14 @@ public class Product {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     Product fullUpdate(Product source) {
