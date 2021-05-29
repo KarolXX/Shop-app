@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/categories")
@@ -33,5 +34,19 @@ public class CategoryController {
         logger.info("New category has been created");
         var result = service.createCategory(category);
         return ResponseEntity.created(URI.create("/" + result.getId())).body(category);
+    }
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<?> deleteCategory(@PathVariable int id) {
+        logger.warn("Removing category");
+        service.deleteCategoryById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{id}")
+    ResponseEntity<?> replaceCategoryProducts(@PathVariable int id, @RequestBody Set<Product> source) {
+        logger.warn("Products swap");
+        service.replaceCategoryProducts(id, source);
+        return ResponseEntity.ok().build();
     }
 }

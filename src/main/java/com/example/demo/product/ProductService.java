@@ -44,7 +44,7 @@ public class ProductService {
         // complete removal after 150 seconds
         new Thread(() -> {
             try {
-                Thread.sleep(150000);
+                Thread.sleep(15);
                 repository.deleteById(id);
             } catch (Exception e) {
                 logger.error("Error removing the product");

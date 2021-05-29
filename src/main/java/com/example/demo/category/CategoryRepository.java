@@ -9,4 +9,6 @@ public interface CategoryRepository {
     Optional<Category> findById(Integer id);
 
     Category save(Category entity);
+
+    void deleteById(Integer id);
 }

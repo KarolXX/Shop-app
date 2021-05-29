@@ -63,7 +63,7 @@ public class ProductController {
     @Transactional
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable int id) {
-        logger.warn("Deleting product!");
+        logger.warn("Removing product!");
         service.deleteProduct(id);
         //repository.deleteById(id); // removes row with given id from db
         return ResponseEntity.ok().build();
