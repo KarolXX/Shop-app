@@ -17,7 +17,7 @@ public class ProductService {
     @Transactional
     public Product updateProduct(int id, Product source) {
         var target = repository.findProductByIdAndActiveTrue(id)
-                .orElseThrow(() -> new IllegalArgumentException("No product with given id"));
+                .orElseThrow(() -> new IllegalArgumentException("No active product with given id"));
         logger.info("Full updating product");
         return target.fullUpdate(source);
     }

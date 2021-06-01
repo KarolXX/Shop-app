@@ -60,7 +60,7 @@ public class Product {
         this.active = active;
     }
 
-    Category getCategory() {
+    public Category getCategory() {
         return category;
     }
 

@@ -21,14 +21,13 @@ public class CategoryService {
 
     @Transactional
     public List<Category> getAll() {
-        // FIXME: `totalQuantity` is not computed automatically
-        //  when we change amount of specific product that belongs to category
+        // FIXME: `totalQuantity` is not computed automatically when we change amount of specific product that belongs to category
         //  thanks to the @Transactional it updates itself after downloading all products
         //  but I would like to update it as soon as the product `amount` has changed
         return repository.findAll().stream()
                 .map(category -> {
                     category.setTotalQuantity(
-                            getTotalQuantityProducts(category)
+                            computeTotalQuantityProducts(category)
                     );
                     return category;
                 }).collect(Collectors.toList());
@@ -36,9 +35,9 @@ public class CategoryService {
 
     Category createCategory(Category category) {
         category.setTotalQuantity(
-                getTotalQuantityProducts(category)
+                computeTotalQuantityProducts(category)
         );
-        // add `category` to products that are created along with category
+        // set `category` to products that are created along with category
         category.setProducts(
                 category.getProducts().stream()
                 .map(product -> {
@@ -49,6 +48,9 @@ public class CategoryService {
         return repository.save(category);
     }
 
+    // after a category is deleted, its products are not removed,
+    // they are still in the database,
+    // but no longer associated with the category
     void deleteCategoryById(int id) {
         var target = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No such category"));
@@ -62,14 +64,14 @@ public class CategoryService {
     @Transactional
     public void replaceCategoryProducts(int id, Set<Product> newSet) {
         var target = repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("No category"));
+                .orElseThrow(() -> new IllegalArgumentException("No such category"));
 
-        // break association between the category and the old products from both sides
+        // break association between the category and the old products from product side
+        // ( Association is broken later from the category side )
         for(Product oldProduct : target.getProducts()) {
             oldProduct.setCategory(null);
             productRepository.deleteById(oldProduct.getId());
         }
-        target.setProducts(null);
 
         // create association between category and new products
         var readyNewSet = newSet.stream()
@@ -77,7 +79,7 @@ public class CategoryService {
                     product.setCategory(target);
                     return product;
                 }).collect(Collectors.toSet());
-        // replace products
+        // replace products ( and break association between the category and the old products from category side )
         target.setProducts(readyNewSet);
 
         // FIXME: When I remove the @Transactional and add this line,
@@ -88,7 +90,7 @@ public class CategoryService {
 
     // I labeled this method static because it doesn't use the individual characteristics of this class
     // - with the keyword static, the method has a smaller size
-    private static int getTotalQuantityProducts(Category category) {
+    public static int computeTotalQuantityProducts(Category category) {
         var productsAmount = category.getProducts().stream()
                 .map(product -> product.getAmount())
                 .collect(Collectors.toList());
