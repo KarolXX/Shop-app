@@ -4,6 +4,7 @@ import com.example.demo.product.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -75,7 +76,7 @@ class CategoryServiceTest {
     //  because the method `getMockCategory` does not provide this
     @Test
     @DisplayName("should delete category and break the associations between this category and its products")
-    void deleteCategoryById_categoryExists_deleteCategoryAndBreakAssociationWithItsProducts() {
+    void deleteCategoryById_categoryExists_deleteCategoryAndBreakAssociationWithItsProducts() throws NoSuchFieldException, IllegalAccessException {
         // given
         Category categoryToDelete = getMockCategory(Set.of(1, 2));
         // and
@@ -89,8 +90,20 @@ class CategoryServiceTest {
 
         // then
         assertThat(size - 1).isEqualTo(inMemoryCategoryRepo.getSize());
+
+        // FIXME: I want to check that each product's category is null,
+        //  but I don't have a public getter for the category field.
+        //  Is my solution okay?
         categoryToDelete.getProducts().forEach(product -> {
-            assertThat(product.getCategory()).isEqualTo(null);
+            Field field = null;
+            try {
+                field = product.getClass().getDeclaredField("category");
+                field.setAccessible(true);
+                var category = field.get(Integer.class);
+                assertThat(category).isEqualTo(null);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new RuntimeException();
+            };
         });
     }
 

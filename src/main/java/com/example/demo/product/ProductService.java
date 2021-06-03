@@ -22,6 +22,8 @@ public class ProductService {
         return target.fullUpdate(source);
     }
 
+    // FIXME: if the product is related to a category,
+    //  then I have to change the totalQuantity of the category accordingly
     @Transactional
     public void changeAmount(int id, String change) {
         var target = repository.findProductByIdAndActiveTrue(id)
