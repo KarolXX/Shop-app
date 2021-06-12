@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/products")
+@CrossOrigin
 public class ProductController {
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
     private ProductRepository repository;
@@ -26,7 +27,7 @@ public class ProductController {
     @GetMapping
     ResponseEntity<List<Product>> getAllAvailable() {
         logger.warn("Exposing all available products");
-        var result = repository.findProducts();
+        var result = repository.findActiveProducts();
         return ResponseEntity.ok(result);
     }
 
@@ -36,6 +37,14 @@ public class ProductController {
             return getAllAvailable();
         logger.warn("Exposing all unavailable products");
         var result = repository.findProductsByAmountOrderByName(0);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/{id}")
+    ResponseEntity<Product> getProduct(@PathVariable int id) {
+        logger.info("Exposing specified product");
+        var result = repository.findProductByIdAndActiveTrue(id)
+                .orElseThrow(() -> new IllegalArgumentException());
         return ResponseEntity.ok(result);
     }
 
@@ -56,7 +65,8 @@ public class ProductController {
 
     @PutMapping("/{id}")
     ResponseEntity<?> updateProduct(@PathVariable int id, @RequestBody @Valid Product source) {
-        var result = service.updateProduct(id, source);
+        logger.info("Full updating product");
+        service.updateProduct(id, source);
         return ResponseEntity.noContent().build();
     }
 

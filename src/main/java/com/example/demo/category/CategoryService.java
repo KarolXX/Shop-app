@@ -5,6 +5,8 @@ import com.example.demo.product.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -21,9 +23,6 @@ public class CategoryService {
 
     @Transactional
     public List<Category> getAll() {
-        // FIXME: `totalQuantity` is not computed automatically when we change amount of specific product that belongs to category
-        //  thanks to the @Transactional it updates itself after downloading all products
-        //  but I would like to update it as soon as the product `amount` has changed
         return repository.findAll().stream()
                 .map(category -> {
                     category.setTotalQuantity(
@@ -31,6 +30,18 @@ public class CategoryService {
                     );
                     return category;
                 }).collect(Collectors.toList());
+    }
+
+    List<Product> getProducts(int id) {
+        var category = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("No category with given id"));
+        var categoryProducts = new ArrayList<>(category.getProducts());
+        var result = categoryProducts.stream()
+                .filter(Product::isActive)
+                .filter(product -> product.getAmount() > 0)
+                .sorted(Comparator.comparing(Product::getAmount))
+                .collect(Collectors.toList());
+        return new ArrayList<>(result);
     }
 
     Category createCategory(Category category) {
@@ -61,7 +72,7 @@ public class CategoryService {
         repository.deleteById(id);
     }
 
-    @Transactional
+    //@Transactional
     public void replaceCategoryProducts(int id, Set<Product> newSet) {
         var target = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No such category"));
@@ -85,7 +96,7 @@ public class CategoryService {
         // FIXME: When I remove the @Transactional and add this line,
         //  it generates an error because during persistence, the program encounters a null value in the `createGroup` method
         //  WHY if this line shouldn't even call this method ????????????????
-        //repository.save(target);
+        repository.save(target);
     }
 
     // I labeled this method static because it doesn't use the individual characteristics of this class

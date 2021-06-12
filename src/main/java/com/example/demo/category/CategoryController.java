@@ -12,6 +12,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/categories")
+@CrossOrigin
 public class CategoryController {
     private static final Logger logger = LoggerFactory.getLogger(CategoryController.class);
     private CategoryRepository repository;
@@ -23,9 +24,16 @@ public class CategoryController {
     }
 
     @GetMapping
-    ResponseEntity<List<Category>> getAllProducts() {
+    ResponseEntity<List<Category>> getAllCategories() {
         logger.warn("Exposing all the categories!");
         var result = service.getAll();
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/{id}/products")
+    ResponseEntity<List<Product>> getProducts(@PathVariable int id) {
+        logger.warn("Exposing all the category products");
+        var result = service.getProducts(id);
         return ResponseEntity.ok(result);
     }
 

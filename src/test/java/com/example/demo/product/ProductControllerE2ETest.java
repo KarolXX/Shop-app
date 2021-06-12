@@ -1,7 +1,6 @@
 package com.example.demo.product;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,7 +27,7 @@ public class ProductControllerE2ETest {
     @Test
     void httpGet_returnsAllAvailableProducts() {
         // given
-        int initialSize = repo.findProducts().size();
+        int initialSize = repo.findActiveProducts().size();
         // and
         Product product0 = new Product();
         Product product1 = new Product();
@@ -57,7 +56,7 @@ public class ProductControllerE2ETest {
         product.setAmount(5);
         product.setName("foo");
         // and
-        int productId = repo.findProducts().size() + 1; // This may fail because this method does not return all objects from db
+        int productId = repo.findActiveProducts().size() + 1; // This may fail because this method does not return all objects from db
         URI expectedLocation = URI.create("/" + productId);
 
         // when

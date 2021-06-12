@@ -11,7 +11,10 @@ import java.util.List;
 
 @Repository
 interface SqlCategoryRepository extends CategoryRepository, JpaRepository<Category, Integer> {
+    // protection against n + 1 selects
     @Override
-    @Query("select distinct c from Category c join fetch c.products")
+    // FIXME how to create query to fetch only categories in which at least one product has an amount > 0,
+    //  and then fetch only such products for that
+    @Query("select distinct c from Category c inner join fetch c.products")
     List<Category> findAll();
 }

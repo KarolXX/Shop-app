@@ -18,8 +18,8 @@ public class ProductService {
     public Product updateProduct(int id, Product source) {
         var target = repository.findProductByIdAndActiveTrue(id)
                 .orElseThrow(() -> new IllegalArgumentException("No active product with given id"));
-        logger.info("Full updating product");
-        return target.fullUpdate(source);
+        var result = target.fullUpdate(source);
+        return result;
     }
 
     // FIXME: if the product is related to a category,
@@ -36,6 +36,10 @@ public class ProductService {
             logger.info("reducing the amount of product");
             target.setAmount(target.getAmount() - 1);
         }
+        else {
+            // when amount == 0
+            logger.info("No such product!");
+        }
     }
 
     @Transactional
@@ -43,10 +47,10 @@ public class ProductService {
         var target = repository.findProductByIdAndActiveTrue(id)
                 .orElseThrow(() -> new IllegalArgumentException("No product with gicen id"));
         target.setActive(false);
-        // complete removal after 150 seconds
+        // FIXME: complete removal after 20 seconds
         new Thread(() -> {
             try {
-                Thread.sleep(15);
+                Thread.sleep(20000);
                 repository.deleteById(id);
             } catch (Exception e) {
                 logger.error("Error removing the product");
