@@ -39,7 +39,7 @@ public class TestConfiguration {
         }
 
         @Override
-        public List<Product> findActiveProducts() {
+        public List<Product> findProducts() {
             return new ArrayList<Product>(products.values().stream()
                     .filter(product -> product.getAmount() > 0)
                     .filter(Product::isActive)
@@ -48,7 +48,7 @@ public class TestConfiguration {
         }
 
         @Override
-        public Optional<Product> findProductByIdAndActiveTrue(Integer id) {
+        public Optional<Product> findProductById(Integer id) {
             return products.values().stream()
                     .filter(product -> product.getId() == id)
                     .filter(Product::isActive)

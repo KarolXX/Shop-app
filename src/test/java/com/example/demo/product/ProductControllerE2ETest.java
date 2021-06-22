@@ -27,7 +27,7 @@ public class ProductControllerE2ETest {
     @Test
     void httpGet_returnsAllAvailableProducts() {
         // given
-        int initialSize = repo.findActiveProducts().size();
+        int initialSize = repo.findProducts().size();
         // and
         Product product0 = new Product();
         Product product1 = new Product();
@@ -56,7 +56,7 @@ public class ProductControllerE2ETest {
         product.setAmount(5);
         product.setName("foo");
         // and
-        int productId = repo.findActiveProducts().size() + 1; // This may fail because this method does not return all objects from db
+        int productId = repo.findProducts().size() + 1; // This may fail because this method does not return all objects from db
         URI expectedLocation = URI.create("/" + productId);
 
         // when

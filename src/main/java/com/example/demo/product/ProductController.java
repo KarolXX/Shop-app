@@ -1,10 +1,10 @@
 package com.example.demo.product;
 
+import com.example.demo.product.DTO.ProductUpdateModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,8 +26,8 @@ public class ProductController {
 
     @GetMapping
     ResponseEntity<List<Product>> getAllAvailable() {
-        logger.warn("Exposing all available products");
-        var result = repository.findActiveProducts();
+        logger.warn("Exposing all products");
+        var result = repository.findProducts();
         return ResponseEntity.ok(result);
     }
 
@@ -43,7 +43,7 @@ public class ProductController {
     @GetMapping("/{id}")
     ResponseEntity<Product> getProduct(@PathVariable int id) {
         logger.info("Exposing specified product");
-        var result = repository.findProductByIdAndActiveTrue(id)
+        var result = repository.findProductById(id)
                 .orElseThrow(() -> new IllegalArgumentException());
         return ResponseEntity.ok(result);
     }
@@ -57,12 +57,6 @@ public class ProductController {
         return ResponseEntity.created(URI.create("/" + result.getId())).body(result);
     }
 
-    @PatchMapping(value = "/{id}", params = "value")
-    ResponseEntity<?> changeAmount(@PathVariable int id, @RequestParam("value") String change) {
-        service.changeAmount(id, change);
-        return ResponseEntity.noContent().build();
-    }
-
     @PutMapping("/{id}")
     ResponseEntity<?> updateProduct(@PathVariable int id, @RequestBody @Valid Product source) {
         logger.info("Full updating product");
@@ -70,13 +64,49 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
-    @Transactional
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable int id) {
-        logger.warn("Removing product!");
-        service.deleteProduct(id);
-        //repository.deleteById(id); // removes row with given id from db
-        return ResponseEntity.ok().build();
+    // old version with 3 different methods for PATCH
+//    @PatchMapping(value = "/{id}", params = "value")
+//    ResponseEntity<?> changeAmount(@PathVariable int id, @RequestParam("value") String change) {
+//        service.changeAmount(id, change);
+//        return ResponseEntity.noContent().build();
+//    }
+//
+//    @PatchMapping("/potentialRemoval/{id}")
+//    public ResponseEntity<?> potentialProductRemoval(@PathVariable int id) {
+//        logger.warn("Potential product removing!");
+//        service.potentialProductRemoval(id);
+//        return ResponseEntity.noContent().build();
+//    }
+//
+//    @PatchMapping("/restoring/{id}")
+//    public ResponseEntity<?> restoreProduct(@PathVariable int id) {
+//        logger.warn("Restore product!");
+//        service.restoreProduct(id);
+//        return ResponseEntity.noContent().build();
+//    }
+
+    // new version
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> howToNameIt( //FIXME: how to name this method?
+            @PathVariable int id,
+            @RequestBody(required = false) ProductUpdateModel source
+    ) {
+        // change amount
+        if(source != null) {
+            var result = service.changeAmount(id, source);
+            return ResponseEntity.ok(result);
+        }
+        else {
+            service.changeActive(id);
+            return ResponseEntity.noContent().build();
+        }
+    }
+
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<?> completeProductRemoval(@PathVariable int id) {
+        logger.warn("Complete product removing!");
+        repository.deleteById(id); // removes row with given id from db
+        return ResponseEntity.noContent().build();
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

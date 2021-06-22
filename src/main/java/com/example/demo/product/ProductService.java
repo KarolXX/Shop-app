@@ -1,5 +1,6 @@
 package com.example.demo.product;
 
+import com.example.demo.product.DTO.ProductUpdateModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ public class ProductService {
 
     @Transactional
     public Product updateProduct(int id, Product source) {
-        var target = repository.findProductByIdAndActiveTrue(id)
+        var target = repository.findProductById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No active product with given id"));
         var result = target.fullUpdate(source);
         return result;
@@ -25,36 +26,17 @@ public class ProductService {
     // FIXME: if the product is related to a category,
     //  then I have to change the totalQuantity of the category accordingly
     @Transactional
-    public void changeAmount(int id, String change) {
-        var target = repository.findProductByIdAndActiveTrue(id)
+    public Product changeAmount(int id, ProductUpdateModel source) {
+        var target = repository.findProductById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Product with given id not found"));
-        if(change.equals("plus")) {
-            logger.info("Increasing the amount of product");
-            target.setAmount(target.getAmount() + 1);
-        }
-        else if(target.getAmount() > 0) {
-            logger.info("reducing the amount of product");
-            target.setAmount(target.getAmount() - 1);
-        }
-        else {
-            // when amount == 0
-            logger.info("No such product!");
-        }
+        target.setAmount(source.getAmount());
+        return target;
     }
 
     @Transactional
-    public void deleteProduct(int id) {
-        var target = repository.findProductByIdAndActiveTrue(id)
-                .orElseThrow(() -> new IllegalArgumentException("No product with gicen id"));
-        target.setActive(false);
-        // FIXME: complete removal after 20 seconds
-        new Thread(() -> {
-            try {
-                Thread.sleep(20000);
-                repository.deleteById(id);
-            } catch (Exception e) {
-                logger.error("Error removing the product");
-            }
-        }).start();
+    public void changeActive(int id) {
+        var target = repository.findProductById(id)
+                .orElseThrow(() -> new IllegalArgumentException("No product with given id"));
+        target.setActive(!target.isActive());
     }
 }
