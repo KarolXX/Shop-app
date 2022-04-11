@@ -1,5 +1,6 @@
 package com.example.demo.category;
 
+import com.example.demo.category.DTO.CategoryStats;
 import com.example.demo.product.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,18 +16,25 @@ import java.util.Set;
 @CrossOrigin
 public class CategoryController {
     private static final Logger logger = LoggerFactory.getLogger(CategoryController.class);
-    private CategoryRepository repository;
-    private CategoryService service;
+    private final CategoryRepository repository;
+    private final CategoryService service;
 
     public CategoryController(CategoryRepository repository, CategoryService service) {
         this.repository = repository;
         this.service = service;
     }
 
+    @GetMapping("/stats")
+    ResponseEntity<List<CategoryStats>> getAllCategoriesStats() {
+        logger.warn("Exposing all the statistics categories!");
+        var result = service.getAllStats();
+        return ResponseEntity.ok(result);
+    }
+
     @GetMapping
     ResponseEntity<List<Category>> getAllCategories() {
         logger.warn("Exposing all the categories!");
-        var result = service.getAll();
+        var result = repository.findAll();
         return ResponseEntity.ok(result);
     }
 

@@ -1,5 +1,6 @@
 package com.example.demo.category;
 
+import com.example.demo.category.DTO.CategoryStats;
 import com.example.demo.product.Product;
 import com.example.demo.product.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -13,24 +14,30 @@ import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
-    private CategoryRepository repository;
-    private ProductRepository productRepository;
+    private final CategoryRepository repository;
+    private final ProductRepository productRepository;
 
     public CategoryService(CategoryRepository repository, ProductRepository productRepository) {
         this.repository = repository;
         this.productRepository = productRepository;
     }
 
-    @Transactional
-    public List<Category> getAll() {
-        return repository.findAll().stream()
-                .map(category -> {
-                    category.setTotalQuantity(
-                            computeTotalQuantityProducts(category)
-                    );
-                    return category;
-                }).collect(Collectors.toList());
+    public List<CategoryStats> getAllStats() {
+        return repository.findAllStats();
     }
+
+//    @Transactional
+//    public List<Category> getAll() {
+//        return repository.findAll().stream()
+//                .map(category -> {
+//                    Set<Product> products = category.getProducts();
+//                    if(!ObjectUtils.isEmpty(products)) {
+//                        int totalQuantity = products.stream().mapToInt(Product::getAmount).sum();
+//                        category.setTotalQuantity(totalQuantity);
+//                    }
+//                    return category;
+//                }).collect(Collectors.toList());
+//    }
 
     List<Product> getProducts(int id) {
         var category = repository.findById(id)
@@ -45,9 +52,9 @@ public class CategoryService {
     }
 
     Category createCategory(Category category) {
-        category.setTotalQuantity(
-                computeTotalQuantityProducts(category)
-        );
+//        category.setTotalQuantity(
+//                computeTotalQuantityProducts(category)
+//        );
         // set `category` to products that are created along with category
         category.setProducts(
                 category.getProducts().stream()
@@ -101,14 +108,14 @@ public class CategoryService {
 
     // I labeled this method static because it doesn't use the individual characteristics of this class
     // - with the keyword static, the method has a smaller size
-    public static int computeTotalQuantityProducts(Category category) {
-        var productsAmount = category.getProducts().stream()
-                .map(product -> product.getAmount())
-                .collect(Collectors.toList());
-        int result = 0;
-        for(int product : productsAmount) {
-            result += product;
-        }
-        return result;
-    }
+//    public static int computeTotalQuantityProducts(Category category) {
+//        var productsAmount = category.getProducts().stream()
+//                .map(product -> product.getAmount())
+//                .collect(Collectors.toList());
+//        int result = 0;
+//        for(int product : productsAmount) {
+//            result += product;
+//        }
+//        return result;
+//    }
 }
