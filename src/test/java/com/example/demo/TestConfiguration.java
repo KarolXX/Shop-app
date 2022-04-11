@@ -31,7 +31,7 @@ public class TestConfiguration {
     }
 
     public class TestProductRepository implements ProductRepository {
-        private Map<Integer, Product> products = new HashMap<>();
+        private final Map<Integer, Product> products = new HashMap<>();
         private int index = 0;
 
         public int getSize() {
@@ -79,5 +79,5 @@ public class TestConfiguration {
         public void deleteById(Integer id) {
             products.remove(id);
         }
-    };
+    }
 }
