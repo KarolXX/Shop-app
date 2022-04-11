@@ -1,6 +1,7 @@
 package com.example.demo.category;
 
 import com.example.demo.product.Product;
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -16,10 +17,16 @@ public class Category {
     private int id;
     @NotBlank(message = "Category name must be not empty")
     private String name;
+    //@Formula("SELECT COALESCE(SUM(p.amount), 0) FROM Product p JOIN Category c ON p.category_id=c.id GROUP BY c.id")
+    // the p.category_id=id <-- this id is Category itself id
+    @Formula("( SELECT COALESCE( SUM(p.amount), 0 ) FROM products p JOIN categories c ON p.category_id = c.id WHERE p.category_id = id )")
     private int totalQuantity;
 
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "category")
     private Set<Product> products;
+
+    public Category() {
+    }
 
     public int getId() {
         return id;
@@ -52,4 +59,5 @@ public class Category {
     void setProducts(Set<Product> products) {
         this.products = products;
     }
+
 }
