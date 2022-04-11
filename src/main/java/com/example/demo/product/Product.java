@@ -22,7 +22,7 @@ public class Product {
     private LocalDateTime sellOutDate;
 
     @ManyToOne
-    @JoinColumn(name = "categories_id")
+    @JoinColumn(name = "category_id")
     private Category category;
 
     public Product() {
@@ -79,6 +79,5 @@ public class Product {
     void prePersist() {
         deliveryDate = LocalDateTime.now();
     }
-
 
 }

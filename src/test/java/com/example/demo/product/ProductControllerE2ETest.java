@@ -22,7 +22,7 @@ public class ProductControllerE2ETest {
     @Autowired
     private ProductRepository repo;
 
-    private String baseUrl = "http://localhost:";
+    private final String baseUrl = "http://localhost:";
 
     @Test
     void httpGet_returnsAllAvailableProducts() {
