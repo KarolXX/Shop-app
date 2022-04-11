@@ -16,8 +16,8 @@ import java.util.List;
 @CrossOrigin
 public class ProductController {
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
-    private ProductRepository repository;
-    private ProductService service;
+    private final ProductRepository repository;
+    private final ProductService service;
 
     public ProductController(ProductRepository repository, ProductService service) {
         this.repository = repository;
@@ -87,9 +87,9 @@ public class ProductController {
 
     // new version
     @PatchMapping("/{id}")
-    public ResponseEntity<?> howToNameIt( //FIXME: how to name this method?
-            @PathVariable int id,
-            @RequestBody(required = false) ProductUpdateModel source
+    public ResponseEntity<?> updateProductProperty (
+        @PathVariable int id,
+        @RequestBody(required = false) ProductUpdateModel source
     ) {
         // change amount
         if(source != null) {
