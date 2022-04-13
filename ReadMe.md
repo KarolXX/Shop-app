@@ -6,11 +6,15 @@ Technologies:
 * flyway for database migrations
 * Mockito, JUnit, AssertJ for tests (spring-boot-starter-test dependency)
 
-## Description of the application behaviour and rules
+[Frontend of this backend app](https://github.com/KarolXX/Shop-app-frontend)
+
+# Description of the application behaviour and rules
 There are two entities:
 * product 
 * category
 A product can be associated with a category (but does not have to be). Category must be associated with at least one product.
+
+Layout screenshots of the two main components of the application:
 
 ## Product
 Properties: name, amount, active, category
