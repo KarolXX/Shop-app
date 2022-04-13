@@ -1,5 +1,10 @@
 # Shop app 
-
+Technologies:
+* Spring Boot
+* MySql as database for app and h2 as database for tests
+* JPA - Hibernate 
+* flyway for database migrations
+* Mockito, JUnit, AssertJ for tests (spring-boot-starter-test dependency)
 
 ## Description of the application behaviour and rules
 There are two entities:
@@ -7,7 +12,7 @@ There are two entities:
 * category
 A product can be associated with a category (but does not have to be). Category must be associated with at least one product.
 
-### product
+## Product
 Properties: name, amount, active, category
 #### Some rules related to product:
 * When fetching all products, we are fetching those whose amount > 0
@@ -15,7 +20,7 @@ Properties: name, amount, active, category
 * Removal of the product does not result in immediate removal from DB, results in setting the active flag to FALSE and complete removal takes place after 60 seconds - during these 60 seconds, the application should be able to recover the removed product (setting the active flag to TRUE) 
 * Removal of a product associated with a category does not remove a category UNLESS this category has no other related products (then the category ceases to be associated with its only product, which is prohibited, so the category should be removed)
 
-### category
+## Category
 Properties: name, totalQuantity (sum of the amounts of all related products), products
 #### some rules related to category:
 * If the amount property changes in one of the associated products then the totalQuantity property should be changed accordingly. The same is true for deletion and possible restoration of a product - this should be reflected in the totalQuantity property
