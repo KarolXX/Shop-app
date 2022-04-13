@@ -15,8 +15,10 @@ There are two entities:
 A product can be associated with a category (but does not have to be). Category must be associated with at least one product.
 
 Layout screenshots of the two main components of the application:
+
 ![image](https://user-images.githubusercontent.com/71709330/163165470-ed67c715-6f12-4c3d-9693-f0bc2f6ed005.png)
 
+![image](https://user-images.githubusercontent.com/71709330/163165579-fc75beb0-0422-4b89-97e7-81a72a36bdb4.png)
 
 ## Product
 Properties: name, amount, active, category
