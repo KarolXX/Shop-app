@@ -35,7 +35,7 @@ Properties: name, totalQuantity (sum of the amounts of all related products), pr
 * Removing a category does not remove its related products. This only breaks the association (setting the category property to NULL)
 
 
-### Current lacks of app:
+# Current lacks of app:
 * Unable to register users
 
 
