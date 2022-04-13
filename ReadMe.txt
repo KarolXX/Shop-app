@@ -1,8 +1,10 @@
-SHOP APP
+# Shop app 
+
+Opis działania aplikacji SHOP APP
 W aplikacji istnieją dwie encje: product & category.
 Product moze być powiązany z kategorią (ale nie musi). Category musi być powiązana z co najmniej jednym produktem.
 
-Product ma właściwości: name, amount(ilosc), active, category(powiązana kategoria)
+Product ma właściwości: name, amount, active, category(powiązana kategoria)
 Pobierając wszystkie produkty z DB pobieramy tak naprawde te których właściwość active == TRUE i amount > 0 
 To że amount <= 0 nie oznacza że active == FALSE - te dwie właściwośći są od siebie nie zależne, właściwość active jest potrzebna podczas usuwania produktu ( o tym poniżej )
 Usunięcie produktu nie skutkuje natychmiastowym usunięciem z DB, skutkuje ustawieniem flagi active na FALSE a całkowite usunięcie następuje po 60 sekundach - w trakcie tych 60 sekund aplikacja powinna mieć możliwość odzyskania usunietego produktu (ustawienie flagi active na TRUE) 
