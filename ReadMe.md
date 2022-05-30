@@ -26,7 +26,7 @@ Properties: name, amount, active, category
 #### Some rules related to product:
 * When fetching all products, we are fetching those whose amount > 0
 * The fact that amount == 0 does not mean that active == FALSE - these two properties are independent of each other, the active property is needed when removing a product (more on that below)
-* Removal of the product does not result in immediate removal from DB, results in setting the active flag to FALSE and complete removal takes place after 60 seconds - during these 60 seconds, the application should be able to recover the removed product (setting the active flag to TRUE) 
+* Removal of the product does not result in immediate removal from DB, results in setting the active flag to FALSE and complete removal takes place after 20 seconds - during these 20 seconds, the application should be able to recover the removed product (setting the active flag to TRUE) 
 * Removal of a product associated with a category does not remove a category UNLESS this category has no other related products (then the category ceases to be associated with its only product, which is prohibited, so the category should be removed)
 
 ## Category
