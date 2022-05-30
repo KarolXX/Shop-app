@@ -19,7 +19,7 @@ Layout screenshots of the two main components of the application:
 
 ![image](https://user-images.githubusercontent.com/71709330/163165470-ed67c715-6f12-4c3d-9693-f0bc2f6ed005.png)
 
-![image](https://user-images.githubusercontent.com/71709330/163165579-fc75beb0-0422-4b89-97e7-81a72a36bdb4.png)
+![image](https://user-images.githubusercontent.com/71709330/170963854-79ceff69-6ace-4c7a-afdc-5b4200041927.png)
 
 ## Product
 Properties: name, amount, active, category
