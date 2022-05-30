@@ -38,6 +38,7 @@ Properties: name, totalQuantity (sum of the amounts of all related products), pr
 
 # Current lacks of app:
 * Unable to register users so no security
+* There is no form to create entities in frontend (Postman can create them)
 
 
 
