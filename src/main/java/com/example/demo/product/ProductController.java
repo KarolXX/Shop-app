@@ -3,6 +3,7 @@ package com.example.demo.product;
 import com.example.demo.product.DTO.ProductUpdateModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,17 +25,15 @@ public class ProductController {
         this.service = service;
     }
 
-    @GetMapping
-    ResponseEntity<List<Product>> getAllAvailable() {
+    @GetMapping()
+    ResponseEntity<List<Product>> getAllAvailable(Pageable pageable) {
         logger.warn("Exposing all products");
-        var result = repository.findProducts();
+        var result = repository.findProducts(pageable);
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping(params = "available")
-    ResponseEntity<List<Product>> getAllUnavailable(@RequestParam(defaultValue = "true") boolean available) {
-        if(available)
-            return getAllAvailable();
+    @GetMapping(params = {"available", "!sort", "!page", "!size"})
+    ResponseEntity<List<Product>> getAllUnavailable(@RequestParam(defaultValue = "false") boolean available) {
         logger.warn("Exposing all unavailable products");
         var result = repository.findProductsByAmountOrderByName(0);
         return ResponseEntity.ok(result);

@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
@@ -40,6 +41,16 @@ public class TestConfiguration {
 
         @Override
         public List<Product> findProducts() {
+            return new ArrayList<Product>(products.values().stream()
+                    .filter(product -> product.getAmount() > 0)
+                    .filter(Product::isActive)
+                    .collect(Collectors.toList())
+            );
+        }
+
+        // the same as in case without parameter ( implementation only to avoid errors after starting the application )
+        @Override
+        public List<Product> findProducts(Pageable pageable) {
             return new ArrayList<Product>(products.values().stream()
                     .filter(product -> product.getAmount() > 0)
                     .filter(Product::isActive)
