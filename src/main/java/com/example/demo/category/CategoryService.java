@@ -26,19 +26,6 @@ public class CategoryService {
         return repository.findAllStats();
     }
 
-//    @Transactional
-//    public List<Category> getAll() {
-//        return repository.findAll().stream()
-//                .map(category -> {
-//                    Set<Product> products = category.getProducts();
-//                    if(!ObjectUtils.isEmpty(products)) {
-//                        int totalQuantity = products.stream().mapToInt(Product::getAmount).sum();
-//                        category.setTotalQuantity(totalQuantity);
-//                    }
-//                    return category;
-//                }).collect(Collectors.toList());
-//    }
-
     List<Product> getProducts(int id) {
         var category = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No category with given id"));
@@ -52,10 +39,6 @@ public class CategoryService {
     }
 
     Category createCategory(Category category) {
-//        category.setTotalQuantity(
-//                computeTotalQuantityProducts(category)
-//        );
-        // set `category` to products that are created along with category
         category.setProducts(
                 category.getProducts().stream()
                 .map(product -> {

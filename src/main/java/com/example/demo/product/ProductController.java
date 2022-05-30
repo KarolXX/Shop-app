@@ -3,6 +3,7 @@ package com.example.demo.product;
 import com.example.demo.product.DTO.ProductUpdateModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class ProductController {
     }
 
     @GetMapping()
-    ResponseEntity<List<Product>> getAllAvailable(Pageable pageable) {
+    ResponseEntity<Page<Product>> getAllAvailable(Pageable pageable) {
         logger.warn("Exposing all products");
         var result = repository.findProducts(pageable);
         return ResponseEntity.ok(result);
@@ -64,6 +65,7 @@ public class ProductController {
     }
 
     // old version with 3 different methods for PATCH
+
 //    @PatchMapping(value = "/{id}", params = "value")
 //    ResponseEntity<?> changeAmount(@PathVariable int id, @RequestParam("value") String change) {
 //        service.changeAmount(id, change);
@@ -84,7 +86,7 @@ public class ProductController {
 //        return ResponseEntity.noContent().build();
 //    }
 
-    // new version
+    // new version with only one PATCH responsible for above three PATCH methods
     @PatchMapping("/{id}")
     public ResponseEntity<?> updateProductProperty (
         @PathVariable int id,

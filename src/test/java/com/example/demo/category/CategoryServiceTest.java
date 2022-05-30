@@ -4,6 +4,9 @@ import com.example.demo.category.DTO.CategoryStats;
 import com.example.demo.product.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -194,6 +197,7 @@ class CategoryServiceTest {
             return null;
         }
 
+        // temporary implementation
         @Override
         public List<Category> findAll() {
             return new ArrayList<Category>(map.values());

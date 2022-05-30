@@ -17,8 +17,6 @@ public class Category {
     private int id;
     @NotBlank(message = "Category name must be not empty")
     private String name;
-    //@Formula("SELECT COALESCE(SUM(p.amount), 0) FROM Product p JOIN Category c ON p.category_id=c.id GROUP BY c.id")
-    // the p.category_id=id <-- this id is Category itself id
     @Formula("( SELECT COALESCE( SUM(p.amount), 0 ) FROM products p JOIN categories c ON p.category_id = c.id WHERE p.category_id = id )")
     private int totalQuantity;
 
