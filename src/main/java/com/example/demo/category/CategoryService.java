@@ -72,10 +72,12 @@ public class CategoryService {
     void deleteCategoryById(int id) {
         var target = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No such category"));
+
         for(Product product : target.getProducts()) {
             product.setCategory(null);
         }
         target.getProducts().clear();
+
         repository.deleteById(id);
     }
 
@@ -86,7 +88,7 @@ public class CategoryService {
 
         // break association between the category and the old products from product side
         // ( Association is broken later from the category side )
-        for(Product oldProduct : target.getProducts()) {
+        for (Product oldProduct : target.getProducts()) {
             oldProduct.setCategory(null);
             productRepository.deleteById(oldProduct.getId());
         }
@@ -97,25 +99,8 @@ public class CategoryService {
                     product.setCategory(target);
                     return product;
                 }).collect(Collectors.toSet());
+
         // replace products ( and break association between the category and the old products from category side )
         target.setProducts(readyNewSet);
-
-        // FIXME: When I remove the @Transactional and add this line,
-        //  it generates an error because during persistence, the program encounters a null value in the `createGroup` method
-        //  WHY if this line shouldn't even call this method ????????????????
-        //repository.save(target);
     }
-
-    // I labeled this method static because it doesn't use the individual characteristics of this class
-    // - with the keyword static, the method has a smaller size
-//    public static int computeTotalQuantityProducts(Category category) {
-//        var productsAmount = category.getProducts().stream()
-//                .map(product -> product.getAmount())
-//                .collect(Collectors.toList());
-//        int result = 0;
-//        for(int product : productsAmount) {
-//            result += product;
-//        }
-//        return result;
-//    }
 }

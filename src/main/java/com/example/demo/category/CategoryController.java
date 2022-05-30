@@ -59,6 +59,7 @@ public class CategoryController {
         return ResponseEntity.ok().build();
     }
 
+    // deletes category products and assign new set of products
     @PatchMapping("/{id}")
     ResponseEntity<?> replaceCategoryProducts(@PathVariable int id, @RequestBody Set<Product> source) {
         logger.warn("Products swap");
