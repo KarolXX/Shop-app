@@ -38,7 +38,7 @@ Properties: name, totalQuantity (sum of the amounts of all related products), pr
 
 # Current lacks of app:
 * Unable to register users
-
+* Unable to create entities in forms in UI
 
 
 
